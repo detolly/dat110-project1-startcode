@@ -28,14 +28,16 @@ public class MessagingServer {
 
 		Connection connection = null;
 
-		// TODO
-		// accept TCP connection on welcome socket and create messaging connection
-
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
+		try {
+			Socket connector = welcomeSocket.accept();
+			connection = new Connection(connector);
+			return connection;
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
 		}
 
-		return connection;
+		assert(false);
+		return null;
 
 	}
 

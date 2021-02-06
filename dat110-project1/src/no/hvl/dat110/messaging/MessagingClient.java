@@ -25,11 +25,16 @@ public class MessagingClient {
 		// TODO
 		// create TCP socket for client and connection
 		// create connection object
-		
-		if (true) {
-			throw new UnsupportedOperationException(TODO.method());
-		}
 
-		return connection;
+		try {
+			clientSocket = new Socket(server, port);
+			connection = new Connection(clientSocket);
+			return connection;
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		//TODO: Handle ASSERT_NOT_REACHED case
+		assert(false);
+		return null;
 	}
 }

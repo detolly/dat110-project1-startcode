@@ -21,15 +21,17 @@ public class Message {
 	}
 
 	public byte[] encapsulate() {
-		
-		byte[] encoded = null;
-		
-		// TODO
-		// encapulate/encode the payload of this message in the
-		// encoded byte array according to message format
-		
-		if (true)
-		   throw new UnsupportedOperationException(TODO.method());
+
+		assert(payload.length < 128);
+		byte size = (byte)payload.length;
+
+		byte[] encoded = new byte[128];
+		encoded[0] = size;
+
+		for(int i = 1; i < size+1; i++)
+		{
+			encoded[i] = payload[i-1];
+		}
 
 		return encoded;
 		
@@ -37,11 +39,11 @@ public class Message {
 
 	public void decapsulate(byte[] received) {
 
-		// TODO
-		// decapsulate the data contained in the received byte array and store it 
-		// in the payload of this message
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
+		byte size = received[0];
+		this.payload = new byte[size];
+		for(int i = 0; i < size; i++) {
+			payload[i] = received[i+1];
+		}
+
 	}
 }

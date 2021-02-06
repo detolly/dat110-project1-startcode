@@ -31,29 +31,27 @@ public class Connection {
 	}
 
 	public void send(Message message) {
-
-		// TODO
-		// encapsulate the data contained in the message and write to the output stream
-		// Hint: use the encapsulate method on the message
-		throw new UnsupportedOperationException(TODO.method());
+		byte[] bytes = message.encapsulate();
+		try {
+			outStream.write(bytes);
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+			assert(false); // TODO: handle ASSERT_NOT_REACHED();
+		}
 
 	}
 
 	public Message receive() {
-
-		Message message;
-		byte[] recvbuf;
-
-		// TODO
-		// read a segment (128 bytes) from the input stream and decapsulate into message
-		// Hint: create a new Message object and use the decapsulate method
-		
-		if (true) {
-			throw new RuntimeException("not yet implemented");
+		byte[] recvbuf = new byte[128];
+		try {
+			inStream.read(recvbuf);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			assert(false);
 		}
-
-		return message;
-
+		Message m = new Message();
+		m.decapsulate(recvbuf);
+		return m;
 	}
 
 	// close the connection by closing streams and the underlying socket
