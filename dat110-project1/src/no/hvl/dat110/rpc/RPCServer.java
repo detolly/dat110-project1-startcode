@@ -14,15 +14,15 @@ public class RPCServer {
 	
 	// hashmap to register RPC methods which are required to implement RPCImpl
 	
-	private HashMap<Integer,RPCImpl> services;
+	private HashMap<Byte, RPCImpl> services;
 	
 	public RPCServer(int port) {
 		
 		this.msgserver = new MessagingServer(port);
-		this.services = new HashMap<Integer,RPCImpl>();
+		this.services = new HashMap<Byte, RPCImpl>();
 		
 		// the stop RPC methods is built into the server
-		services.put((int)RPCCommon.RPIDSTOP,new RPCServerStopImpl());
+		services.put(RPCCommon.RPIDSTOP,new RPCServerStopImpl());
 	}
 	
 	public void run() {
@@ -36,34 +36,33 @@ public class RPCServer {
 		boolean stop = false;
 		
 		while (!stop) {
-	    
-		   int rpcid;
-		   
-		   // TODO
-		   // - receive message containing RPC request
-		   // - find the identifier for the RPC methods to invoke
-		   // - lookup the method to be invoked
-		   // - invoke the method
-		   // - send back message containing RPC reply
-			
-		   if (true) {
-			   throw new UnsupportedOperationException(TODO.method());
-		   }
-		   
-		   if (rpcid == RPCCommon.RPIDSTOP) {
-			   stop = true;
-		   }
+			Message m = connection.receive();
+			byte[] data = m.getData();
+			byte rpcid = data[0];
+			switch(rpcid) {
+				case RPCCommon.RPIDSTOP:
+					stop = true;
+					continue;
+				default:
+					if (services.containsKey(rpcid)) {
+						byte[] response = services.get(rpcid).invoke(data);
+						Message response_message = new Message(response);
+						connection.send(response_message);
+					} else {
+						System.out.println("Trying to call uninvokable method. Ignoring.");
+					}
+					break;
+
+			}
 		}
-	
 	}
 	
-	public void register(int rpcid, RPCImpl impl) {
+	public void register(byte rpcid, RPCImpl impl) {
 		services.put(rpcid, impl);
 	}
 	
 	public void stop() {
 		connection.close();
 		msgserver.stop();
-		
 	}
 }
