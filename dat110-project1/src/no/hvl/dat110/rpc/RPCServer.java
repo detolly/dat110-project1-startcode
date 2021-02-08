@@ -1,5 +1,6 @@
 package no.hvl.dat110.rpc;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import no.hvl.dat110.TODO;
@@ -35,7 +36,8 @@ public class RPCServer {
 		
 		boolean stop = false;
 		
-		while (!stop) {
+		while (!stop)
+		{
 			Message m = connection.receive();
 			byte[] data = m.getData();
 			byte rpcid = data[0];

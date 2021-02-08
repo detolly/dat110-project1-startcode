@@ -36,7 +36,11 @@ public class Controller  {
 		// loop while reading from sensor and write to display via RPC
 
 		boolean should_run = true;
+		int ran = 0;
 		for(;should_run;) {
+			if (ran++ == 5) {
+				should_run = false;
+			}
 			int temp = sensor.read();
 			display.write(String.format("The temperature is: %d", temp));
 			try {
